@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Registered Users" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" whenResourceMissingType="Key" uuid="5878f883-a962-4876-b0b5-bcc5621effe3">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="host" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     OKM_NODE_BASE.`NBS_UUID` AS OKM_NODE_BASE_NBS_UUID,
+     OKM_NODE_BASE.`NBS_NAME` AS OKM_NODE_BASE_NBS_NAME,
+     OKM_PROP_SUB_RECEIVED.`PSR_TO` AS OKM_PROP_SUB_RECEIVED_PSR_TO,
+     OKM_PROP_SUB_RECEIVED.`PSR_NODE` AS OKM_PROP_SUB_RECEIVED_PSR_NODE,
+     OKM_PROP_SUB_RECEIVED.`PSR_ACCEPTED` AS OKM_PROP_SUB_RECEIVED_PSR_ACCEPTED
+FROM
+     `OKM_PROP_SUB_RECEIVED` OKM_PROP_SUB_RECEIVED INNER JOIN `OKM_NODE_BASE` OKM_NODE_BASE ON OKM_PROP_SUB_RECEIVED.`PSR_NODE` = OKM_NODE_BASE.`NBS_UUID`]]>
+	</queryString>
+	<field name="OKM_NODE_BASE_NBS_UUID" class="java.lang.String"/>
+	<field name="OKM_NODE_BASE_NBS_NAME" class="java.lang.String"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_TO" class="java.lang.String"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_NODE" class="java.lang.String"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_ACCEPTED" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="44" splitType="Stretch">
+			<image>
+				<reportElement key="image-1" x="374" y="0" width="150" height="35" uuid="4ff43838-8f23-4363-882b-14fd5c5b4987"/>
+				<imageExpression><![CDATA[$P{host}+"/logo/report"]]></imageExpression>
+			</image>
+			<textField pattern="yyyy/MM/dd" isBlankWhenNull="false">
+				<reportElement key="textField-13" x="0" y="0" width="65" height="10" forecolor="#010101" uuid="ae7b09b7-45b2-4d2b-9de4-e99bf8578857"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm.ss a" isBlankWhenNull="false">
+				<reportElement key="textField-14" x="0" y="10" width="65" height="10" forecolor="#010101" uuid="c5c72897-acff-45ef-8d6f-f8b34c13c98b"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-3" x="-15" y="42" width="562" height="1" forecolor="#010101" uuid="9595e12f-7567-4667-baad-f4ad46219711"/>
+				<graphicElement fill="Solid"/>
+			</line>
+			<staticText>
+				<reportElement x="65" y="0" width="143" height="24" uuid="a2cd9301-82c6-4d38-a46f-7e1555a91ccf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Traning Docs Closed:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="208" y="4" width="100" height="20" uuid="c01df099-4328-4bb6-a907-649304e8a01f"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<line>
+				<reportElement key="line-4" x="0" y="28" width="140" height="1" forecolor="#010101" uuid="e3a2c366-ff51-46ee-8545-9837836a20af"/>
+			</line>
+			<line>
+				<reportElement key="line-5" x="145" y="28" width="390" height="1" forecolor="#010101" uuid="234c5905-21e2-4321-bcaf-d84f8e136e11"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="0" width="127" height="14" uuid="7874021b-0ac9-48b8-a8a6-da1c143c7608"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Document]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="0" width="69" height="16" uuid="12ed058a-6e71-4d87-ad01-2bdc4ab65e7a"/>
+				<text><![CDATA[Date Assigned]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="208" y="2" width="100" height="14" uuid="c5edde8c-a2a5-4b93-a917-623bd9586f8f"/>
+				<text><![CDATA[User]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="208" height="18" uuid="1b92877f-96bd-4fb6-9621-4ac81e77bcef"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_NODE_BASE_NBS_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="395" y="0" width="129" height="18" uuid="b8c03780-b7e5-43ad-86e5-75335bbe9861"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_PROP_SUB_RECEIVED_PSR_ACCEPTED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="208" y="0" width="181" height="18" uuid="d0c850eb-bde2-4c95-b0d8-45f6f6d37987"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_PROP_SUB_RECEIVED_PSR_TO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<line>
+				<reportElement key="line-2" x="-15" y="4" width="567" height="1" forecolor="#010101" backcolor="#FFFFFF" uuid="03d2e272-46a9-4d5d-8deb-8e479cf5d4d8"/>
+				<graphicElement fill="Solid"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch"/>
+	</summary>
+</jasperReport>
