@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Registered Users" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" whenResourceMissingType="Key" uuid="5878f883-a962-4876-b0b5-bcc5621effe3">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -11,20 +11,32 @@
 	<parameter name="host" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
-     OKM_NODE_SUBSCRIPTOR.`NSB_NODE` AS OKM_NODE_SUBSCRIPTOR_NSB_NODE
+     OKM_NODE_BASE.`NBS_NAME` AS OKM_NODE_BASE_NBS_NAME,
+     OKM_PROP_SUB_RECEIVED.`PSR_NODE` AS OKM_PROP_SUB_RECEIVED_PSR_NODE,
+     OKM_PROP_SUB_RECEIVED.`PSR_ACCEPTED` AS OKM_PROP_SUB_RECEIVED_PSR_ACCEPTED,
+     OKM_PROP_SUB_RECEIVED.`PSR_USER` AS OKM_PROP_SUB_RECEIVED_PSR_USER,
+     OKM_PROP_SUB_RECEIVED.`PSR_SEEN_DATE` AS OKM_PROP_SUB_RECEIVED_PSR_SEEN_DATE
 FROM
-     `OKM_NODE_SUBSCRIPTOR` OKM_NODE_SUBSCRIPTOR]]>
+     `OKM_PROP_SUB_RECEIVED` OKM_PROP_SUB_RECEIVED INNER JOIN `OKM_NODE_BASE` OKM_NODE_BASE ON OKM_PROP_SUB_RECEIVED.`PSR_NODE` = OKM_NODE_BASE.`NBS_UUID`
+WHERE
+     PSR_FROM = 'jmcnaughton' AND
+     PSR_ACCEPTED = 'F'
+ORDER BY
+     PSR_USER, NBS_NAME]]>
 	</queryString>
-	<field name="OKM_NODE_SUBSCRIPTOR_NSB_NODE" class="java.lang.String"/>
+	<field name="OKM_NODE_BASE_NBS_NAME" class="java.lang.String"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_NODE" class="java.lang.String"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_ACCEPTED" class="java.lang.String"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_USER" class="java.lang.String"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_SEEN_DATE" class="java.sql.Timestamp"/>
+	<variable name="Time_String" class="java.lang.String">
+		<variableExpression><![CDATA[$F{OKM_PROP_SUB_RECEIVED_PSR_SEEN_DATE}.toString()]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="45" splitType="Stretch">
-			<image>
-				<reportElement key="image-1" x="632" y="4" width="150" height="35" uuid="4ff43838-8f23-4363-882b-14fd5c5b4987"/>
-				<imageExpression><![CDATA[$P{host}+"/logo/report"]]></imageExpression>
-			</image>
+		<band height="47" splitType="Stretch">
 			<textField pattern="yyyy/MM/dd" isBlankWhenNull="false">
 				<reportElement key="textField-13" x="0" y="0" width="65" height="10" forecolor="#010101" uuid="ae7b09b7-45b2-4d2b-9de4-e99bf8578857"/>
 				<box>
@@ -60,7 +72,7 @@ FROM
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="8" isBold="true" isPdfEmbedded="false"/>
 				</textElement>
-				<text><![CDATA[QSP Traning Record:]]></text>
+				<text><![CDATA[QSP Traning Records:]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
 				<reportElement x="208" y="4" width="100" height="20" uuid="c01df099-4328-4bb6-a907-649304e8a01f"/>
@@ -81,19 +93,15 @@ FROM
 				<text><![CDATA[Document]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="464" y="0" width="69" height="16" uuid="12ed058a-6e71-4d87-ad01-2bdc4ab65e7a"/>
-				<text><![CDATA[Date Assigned]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="354" y="0" width="100" height="14" uuid="c5edde8c-a2a5-4b93-a917-623bd9586f8f"/>
+				<reportElement x="222" y="0" width="100" height="14" uuid="c5edde8c-a2a5-4b93-a917-623bd9586f8f"/>
 				<text><![CDATA[User]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="552" y="2" width="69" height="16" uuid="c81e36bc-0682-4351-86cb-5e578d7de314"/>
-				<text><![CDATA[Accepted?]]></text>
+				<reportElement x="327" y="2" width="69" height="16" uuid="c81e36bc-0682-4351-86cb-5e578d7de314"/>
+				<text><![CDATA[Accepted]]></text>
 			</staticText>
 			<line>
-				<reportElement key="line-3" x="10" y="18" width="782" height="1" forecolor="#010101" uuid="65d9d4ab-4633-4bae-8e27-239dcfc12aa7"/>
+				<reportElement key="line-3" x="0" y="18" width="782" height="1" forecolor="#010101" uuid="65d9d4ab-4633-4bae-8e27-239dcfc12aa7"/>
 				<graphicElement fill="Solid"/>
 			</line>
 		</band>
@@ -101,11 +109,25 @@ FROM
 	<detail>
 		<band height="18" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="343" height="18" uuid="1b92877f-96bd-4fb6-9621-4ac81e77bcef"/>
+				<reportElement x="0" y="0" width="218" height="18" uuid="1b92877f-96bd-4fb6-9621-4ac81e77bcef"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{OKM_NODE_SUBSCRIPTOR_NSB_NODE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{OKM_NODE_BASE_NBS_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="0" width="100" height="18" uuid="7c8fd683-d599-439a-bbc2-f8110505452d"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_PROP_SUB_RECEIVED_PSR_USER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="324" y="-1" width="78" height="18" uuid="eed8fdf4-4a53-4a9f-ac7c-3c076714f20b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_PROP_SUB_RECEIVED_PSR_ACCEPTED}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -113,9 +135,9 @@ FROM
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="30" splitType="Stretch">
+		<band height="29" splitType="Stretch">
 			<line>
-				<reportElement key="line-2" x="-15" y="4" width="567" height="1" forecolor="#010101" backcolor="#FFFFFF" uuid="03d2e272-46a9-4d5d-8deb-8e479cf5d4d8"/>
+				<reportElement key="line-2" x="0" y="4" width="782" height="1" forecolor="#010101" backcolor="#FFFFFF" uuid="03d2e272-46a9-4d5d-8deb-8e479cf5d4d8"/>
 				<graphicElement fill="Solid"/>
 			</line>
 		</band>

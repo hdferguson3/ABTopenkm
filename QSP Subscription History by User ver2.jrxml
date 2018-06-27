@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Registered Users" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" whenResourceMissingType="Key" uuid="5878f883-a962-4876-b0b5-bcc5621effe3">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -11,20 +11,32 @@
 	<parameter name="host" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
-     OKM_NODE_SUBSCRIPTOR.`NSB_NODE` AS OKM_NODE_SUBSCRIPTOR_NSB_NODE
+     MAX(OKM_ACTIVITY.`ACT_DATE`) AS OKM_ACTIVITY_ACT_DATE,
+     OKM_PROP_SUB_RECEIVED.`PSR_USER` AS OKM_PROP_SUB_RECEIVED_PSR_USER,
+     OKM_NODE_BASE.`NBS_NAME` AS OKM_NODE_BASE_NBS_NAME,
+     OKM_NODE_DOCUMENT_VERSION.`NDV_NAME` AS OKM_NODE_DOCUMENT_VERSION_NDV_NAME
 FROM
-     `OKM_NODE_SUBSCRIPTOR` OKM_NODE_SUBSCRIPTOR]]>
+     `OKM_PROP_SUB_RECEIVED` OKM_PROP_SUB_RECEIVED INNER JOIN `OKM_NODE_BASE` OKM_NODE_BASE ON OKM_PROP_SUB_RECEIVED.`PSR_NODE` = OKM_NODE_BASE.`NBS_UUID`
+     INNER JOIN `OKM_NODE_DOCUMENT_VERSION` OKM_NODE_DOCUMENT_VERSION ON OKM_NODE_BASE.`NBS_UUID` = OKM_NODE_DOCUMENT_VERSION.`NDV_PARENT`
+     INNER JOIN `OKM_ACTIVITY` OKM_ACTIVITY ON OKM_NODE_BASE.`NBS_UUID` = OKM_ACTIVITY.`ACT_ITEM`
+WHERE
+   PSR_FROM = 'jmcnaughton'
+ AND ACT_ACTION = 'GET_DOCUMENT_CONTENT'
+ AND NDV_CURRENT = 'T'
+
+GROUP BY NDV_NAME, PSR_USER
+ORDER BY PSR_USER, NBS_NAME, NDV_NAME DESC]]>
 	</queryString>
-	<field name="OKM_NODE_SUBSCRIPTOR_NSB_NODE" class="java.lang.String"/>
+	<field name="OKM_ACTIVITY_ACT_DATE" class="java.sql.Timestamp"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_USER" class="java.lang.String"/>
+	<field name="OKM_NODE_DOCUMENT_VERSION_NDV_NAME" class="java.lang.String"/>
+	<field name="OKM_NODE_BASE_NBS_NAME" class="java.lang.String"/>
+	<field name="OKM_PROP_SUB_RECEIVED_PSR_ACCEPTED" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="45" splitType="Stretch">
-			<image>
-				<reportElement key="image-1" x="632" y="4" width="150" height="35" uuid="4ff43838-8f23-4363-882b-14fd5c5b4987"/>
-				<imageExpression><![CDATA[$P{host}+"/logo/report"]]></imageExpression>
-			</image>
+		<band height="47" splitType="Stretch">
 			<textField pattern="yyyy/MM/dd" isBlankWhenNull="false">
 				<reportElement key="textField-13" x="0" y="0" width="65" height="10" forecolor="#010101" uuid="ae7b09b7-45b2-4d2b-9de4-e99bf8578857"/>
 				<box>
@@ -60,7 +72,7 @@ FROM
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="8" isBold="true" isPdfEmbedded="false"/>
 				</textElement>
-				<text><![CDATA[QSP Traning Record:]]></text>
+				<text><![CDATA[QSP Traning Records:]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
 				<reportElement x="208" y="4" width="100" height="20" uuid="c01df099-4328-4bb6-a907-649304e8a01f"/>
@@ -74,38 +86,70 @@ FROM
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="127" height="14" uuid="7874021b-0ac9-48b8-a8a6-da1c143c7608"/>
+				<reportElement x="208" y="0" width="39" height="14" uuid="7874021b-0ac9-48b8-a8a6-da1c143c7608"/>
 				<textElement>
-					<font fontName="SansSerif" isBold="true" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" isBold="false" isPdfEmbedded="false"/>
 				</textElement>
+				<text><![CDATA[USER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="14" uuid="c5edde8c-a2a5-4b93-a917-623bd9586f8f"/>
 				<text><![CDATA[Document]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="464" y="0" width="69" height="16" uuid="12ed058a-6e71-4d87-ad01-2bdc4ab65e7a"/>
-				<text><![CDATA[Date Assigned]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="354" y="0" width="100" height="14" uuid="c5edde8c-a2a5-4b93-a917-623bd9586f8f"/>
-				<text><![CDATA[User]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="552" y="2" width="69" height="16" uuid="c81e36bc-0682-4351-86cb-5e578d7de314"/>
-				<text><![CDATA[Accepted?]]></text>
-			</staticText>
 			<line>
-				<reportElement key="line-3" x="10" y="18" width="782" height="1" forecolor="#010101" uuid="65d9d4ab-4633-4bae-8e27-239dcfc12aa7"/>
+				<reportElement key="line-3" x="0" y="18" width="782" height="1" forecolor="#010101" uuid="65d9d4ab-4633-4bae-8e27-239dcfc12aa7"/>
 				<graphicElement fill="Solid"/>
 			</line>
+			<staticText>
+				<reportElement x="507" y="0" width="100" height="14" uuid="97510040-9a57-4089-b99e-026a4f6cfa2f"/>
+				<text><![CDATA[Current Version]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="624" y="0" width="100" height="14" uuid="8bd015d1-46e0-4ad7-b154-b5aa7540a6d9"/>
+				<text><![CDATA[Train Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="308" y="0" width="141" height="14" uuid="60f5c0c3-89e8-4896-bca3-dec7a6af9868"/>
+				<text><![CDATA[Accepted Subscription]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="18" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="343" height="18" uuid="1b92877f-96bd-4fb6-9621-4ac81e77bcef"/>
+				<reportElement x="0" y="0" width="189" height="18" uuid="1b92877f-96bd-4fb6-9621-4ac81e77bcef"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{OKM_NODE_SUBSCRIPTOR_NSB_NODE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{OKM_NODE_BASE_NBS_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="208" y="0" width="67" height="18" uuid="7c8fd683-d599-439a-bbc2-f8110505452d"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_PROP_SUB_RECEIVED_PSR_USER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="507" y="0" width="24" height="18" uuid="3260ae73-e01b-4cde-8860-d2c4307a7921"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_NODE_DOCUMENT_VERSION_NDV_NAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="624" y="0" width="158" height="18" uuid="ded71361-0eb4-4f9f-b45c-7e33ca0a8ae9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_ACTIVITY_ACT_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="0" width="24" height="18" uuid="e8672018-254a-491d-89bf-4d9f55126c86"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OKM_PROP_SUB_RECEIVED_PSR_ACCEPTED}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -115,7 +159,7 @@ FROM
 	<pageFooter>
 		<band height="30" splitType="Stretch">
 			<line>
-				<reportElement key="line-2" x="-15" y="4" width="567" height="1" forecolor="#010101" backcolor="#FFFFFF" uuid="03d2e272-46a9-4d5d-8deb-8e479cf5d4d8"/>
+				<reportElement key="line-2" x="0" y="4" width="782" height="1" forecolor="#010101" backcolor="#FFFFFF" uuid="03d2e272-46a9-4d5d-8deb-8e479cf5d4d8"/>
 				<graphicElement fill="Solid"/>
 			</line>
 		</band>
